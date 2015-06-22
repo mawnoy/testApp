@@ -3,7 +3,7 @@
 // angular.module is a global place for creating, registering and retrieving Angular modules
 // 'starter' is the name of this angular module example (also set in a <body> attribute in index.html)
 // the 2nd parameter is an array of 'requires'
-angular.module('testApp', ['ionic'])
+angular.module('testApp', ['ionic', 'ionic-timepicker'])
 
 .run(function($ionicPlatform) {
   $ionicPlatform.ready(function() {
@@ -37,7 +37,7 @@ angular.module('testApp', ['ionic'])
         detail: {
           id: projectTitle.idNum,
           sub: projectTitle.sub,
-          date: projectTitle.date,
+          dateTime: projectTitle.date,
         },
         img: projectTitle.img,
         student: []
@@ -63,27 +63,15 @@ angular.module('testApp', ['ionic'])
     .state('app', {
       url: '/app',
       abstract: true,
-      templateUrl: 'menu.html',
-      // templateUrl: 'main.html'
-      // views: {
-      // //   'navvv': {
-      // //     templateUrl: 'menu.html'
-      // //   }
-      // 'menuContent': {
-      //     templateUrl: 'main.html',
-      //     controller: 'ClassRoomCtrl'
-      //   }
+      templateUrl: 'menu.html'
     })
 
-    .state('app.main', {
-      url: '/main',
+    .state('app.classes', {
+      url: '/classes',
       views: {
-        // 'navvv': {
-        //   templateUrl: 'menu.html'
-        // },
         'menuContent': {
-          templateUrl: 'main.html',
-          controller: 'ClassRoomCtrl'
+          templateUrl: 'classes.html',
+          controller: 'classesCtrl'
         }
       }
     })
@@ -92,7 +80,8 @@ angular.module('testApp', ['ionic'])
       url: '/schedule',
       views: {
         'menuContent': {
-          templateUrl: 'schedule.html'
+          templateUrl: 'schedule.html',
+          controller: 'scheduleCtrl'
         }
       }
     })
@@ -115,65 +104,82 @@ angular.module('testApp', ['ionic'])
       }
     })
 
-    .state('app.tabs', {
-      url:'/tabs{id:[0-9]{1,8}}',
-      views: {
-        'menuContent': {
-          templateUrl: 'tabs.html',
-          controller: 'TabCtrl'
-        }
-      }
+    .state('class', {
+      url: '/class:id',
+      abstract: true,
+      templateUrl: 'class.html'
     })
 
-    .state('app.tabs.student', {
-      url:'/student',
+    .state('class.info', {
+      url: '/info',
       views: {
         'info-tab': {
-          templateUrl: 'studentList.html'
+          templateUrl: 'info.html',
+          controller: 'tabsCtrl'
         }
       }
     })
 
-    .state('app.tabs.attendance', {
-      url:'/attendance',
+    .state('class.attendance', {
+      url: '/attendance',
       views: {
         'attendance-tab': {
-          templateUrl: 'attendance.html'
+          templateUrl: 'attendance.html',
+          controller: 'tabsCtrl'
         }
       }
     })
 
-    .state('app.tabs.score', {
-      url:'/score',
+    .state('class.score', {
+      url: '/score',
       views: {
         'score-tab': {
-          templateUrl: 'score.html'
+          templateUrl: 'score.html',
+          controller: 'tabsCtrl'
+        }
+      }
+    })
+
+    .state('class.facts', {
+      url: '/facts',
+      views: {
+        'info-tab': {
+          templateUrl: 'facts.html'
         }
       }
     });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/app/main');
+  $urlRouterProvider.otherwise('/app/classes');
 
   // make back-button title false.
   $ionicConfigProvider.backButton.text('').previousTitleText(false);
 })
 
-.controller('ClassRoomCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, Projects) {
+.controller('classesCtrl', function($scope, $ionicModal, $ionicSideMenuDelegate, Projects, $ionicPopup) {
+  
+  // Set list-item can swipe.
+  $scope.listCanSwipe = true;
 
-  // Create new Class Object from factory.
+  // Create new Class and save to localstorage.
   var createProject = function(projectTitle) {
     var newProject = Projects.newProject(projectTitle);
     $scope.classLists.push(newProject);
     Projects.save($scope.classLists);
-    $scope.selectProject(newProject, $scope.classLists.length - 1);
+    // $scope.selectProject(newProject, $scope.classLists.length - 1);
   };
 
   // Load all Class from localstorage.
   $scope.classLists = Projects.all();
-  $scope.activeProject = $scope.classLists[Projects.getLastActiveIndex()];
+  // $scope.activeProject = $scope.classLists[Projects.getLastActiveIndex()];
 
-  // Get information of class from Model.
+  $ionicModal.fromTemplateUrl('addClass-modal.html', {
+    scope: $scope
+  }).then(function(modal) {
+    $scope.classModal = modal;
+  });
+
+  // Get information of class from Modal.
   $scope.createClass = function(classRoom) {
     
     var classId = $scope.classLists.length; 
@@ -181,8 +187,8 @@ angular.module('testApp', ['ionic'])
     var classObj = {
       idNum: classId,
       sec: classRoom.sec,
-      sub: classRoom.subject,
-      date: classRoom.date,
+      sub: classRoom.subject.subTitle,
+      date: $scope.dayLists,
       img: '/images/subject-icon.png' 
     };
 
@@ -193,7 +199,7 @@ angular.module('testApp', ['ionic'])
     classRoom.sec = '';
     classRoom.subject = '';
     classRoom.date = '';
-
+    $scope.dayLists = [];
   };
 
   $scope.newClass = function() {
@@ -205,36 +211,65 @@ angular.module('testApp', ['ionic'])
   };
 
   // Called to select the given project
-  $scope.selectProject = function(project, index) {
-    $scope.activeProject = project;
-    Projects.setLastActiveIndex(index);
-    $ionicSideMenuDelegate.toggleLeft(false);
+  // $scope.selectProject = function(project, index) {
+  //   $scope.activeProject = project;
+  //   Projects.setLastActiveIndex(index);
+  //   $ionicSideMenuDelegate.toggleLeft(false);
+  // };
+
+
+  $scope.slots = {
+    epochTime: 12600, 
+    endsTime: 12600,
+    format: 12,
+    step: 15
   };
 
+  $scope.days = ['Mon', 'Tue', 'Wen', 'Thu', 'Fri', 'Sat', 'Sun'];
+  $scope.dayLists = [];
+  
+  $scope.openTimePicker = function(days) {
 
-  $ionicModal.fromTemplateUrl('addClass-modal.html', {
-    scope: $scope
-  }).then(function(modal) {
-    $scope.classModal = modal;
-  });
+    var timePickerPopup = $ionicPopup.show({
+      template: '<h3>Start</h3><ionic-timepicker etime="slots.epochTime" format="slots.format" step="slots.step"><button class="button button-block button-positive"><standard-time-meridian etime="slots.epochTime"></standard-time-meridian></button></ionic-timepicker><h3>End</h3><ionic-timepicker etime="slots.endsTime" format="slots.format" step="slots.step"><button class="button button-block button-positive"><standard-time-meridian etime="slots.endsTime"></standard-time-meridian></button></ionic-timepicker>',
+      title: 'Set time',
+      scope: $scope,
+      buttons: [
+        {text: 'Cancel'},
+        {
+          text: '<b>Save</b>',
+          type: 'button-positive',
+          onTap: function() {
 
+            var subject = {
+              day: days,
+              startTime: $scope.slots.epochTime,
+              endTime: $scope.slots.endsTime
+            };
 
-  // $scope.title = $scope.classLists[0].title + ' - Info';
-
-  // $scope.onTabSelected = function(title) {
-  //   $scope.title = $scope.classLists[0].title + ' - ' + title;
-  // };
+            $scope.dayLists.push(subject);
+          }
+        }
+      ]
+    });
+  };
 
 })
 
-.controller('TabCtrl', function($scope, Projects, $stateParams) {
+// .controller('modalCtrl', function($scope, $ionicPopup) {
+
+
+// })
+
+.controller('tabsCtrl', function($scope, Projects, $stateParams) {
   
   $scope.classLists = Projects.all();
+  $scope.pageId = $scope.classLists[$stateParams.id].title + ' - ' +$scope.title;
 
-  $scope.title = $scope.classLists[$stateParams.id].title + ' - Info';
+  $scope.classTitle = $scope.pageId;
 
-  $scope.onTabSelected = function(title) {
-    $scope.title = $scope.classLists[$stateParams.id].title + ' - ' + title;
-  };
+})
 
+.controller('scheduleCtrl', function($scope) {
+  $scope.slots = {epochTime: 12600, format: 12, step: 15};
 });

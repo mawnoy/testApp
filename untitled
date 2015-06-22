@@ -1,0 +1,204 @@
+       <script id="schedule.html" type="text/ng-template">
+      <ion-view view-title="Schedule">
+        <ion-nav-buttons side="left">
+          <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+        <ion-content>
+          <h1>Schedule</h1>
+        </ion-content>
+      </ion-view>
+    </script>
+  <script id="addClass-modal.html" type="text/ng-template">
+      <ion-modal-view class="modal">
+
+        <ion-header-bar>
+          <h1 class="title">New Class</h1>
+          <button class="button button-clear button-positive" ng-click="closeNewClass()">
+            Cancel
+          </button>
+        </ion-header-bar>
+        
+        <ion-content>
+          <form ng-submit="createClass(classRoom)">
+            <ion-list>
+              <label class="item item-input item-stacked-label">
+                <span class="input-label">Class Sec</span>
+                <input type="text" placeholder="Class's name you want to create." ng-model="classRoom.sec">
+              </label>
+              <label class="item item-input item-stacked-label">
+                <span class="input-label">Subjects</span>
+                <input type="text" placeholder="What's Subjects?" ng-model="classRoom.subject">
+              </label>
+              <label class="item item-input item-stacked-label">
+                <span class="input-label">Time</span>
+                <input type="text" placeholder="Start-End Times" ng-model="classRoom.date">
+              </label>
+            </ion-list>
+            <div class="padding">
+              <button type="submit" class="button button-block button-positive">Create Class
+              </button>
+            </div>
+          </form>
+        </ion-content>
+      
+      </ion-modal-view>
+    </script>
+    <script id="message.html" type="text/ng-template">
+      <ion-view view-title="Message">
+        <ion-nav-buttons side="left">
+          <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+        <ion-content>
+          <h1>Message</h1>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="setting.html" type="text/ng-template">
+      <ion-view view-title="Setting">
+        <ion-nav-buttons side="left">
+          <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+        </ion-nav-buttons>
+        <ion-content>
+          <h1>setting</h1>
+        </ion-content>
+      </ion-view>
+    </script>
+
+    <script id="studentList.html" type="text/ng-template">
+      <ion-view title="StudentList">
+
+        <ion-content>
+          <h1>StudentList</h1>
+        </ion-content>
+
+      </ion-view>
+    </script>
+
+    <script id="attendance.html" type="text/ng-template">
+      <ion-view title="Attendance">
+        
+        <ion-content>
+          <h1>Attendance</h1>
+        </ion-content>
+      </ion-view>
+
+    </script>
+
+    <script id="score.html" type="text/ng-template">
+      <ion-view title="Score">
+        
+        <ion-content>
+          <h1>Score</h1>
+        </ion-content>
+      </ion-view>
+
+    </script>
+
+
+    --------------------------------------------
+
+    <script id="class.html" type="text/ng-template">
+      <ion-view title="{{title}}">
+
+        <ion-content>
+
+        <h1>{{pageId.id}}</h1>
+
+        </ion-content>
+
+        <div class="tabs tabs-icon-only">
+          <a nav-clear class="tab-item disable-user-behavior active" title="Class" nav-clear ui-sref="app.class">
+            <i class="icon ion-home"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+          <a nav-clear class="tab-item disable-user-behavior" title="Attendance" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="app.attendance({ss: pageId.id})">
+            <i class="icon ion-chatbubbles"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+          <a nav-clear class="tab-item disable-user-behavior" title="Score" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="app.score">
+            <i class="icon ion-wineglass"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+        </div>
+
+      </ion-view>
+    </script>
+
+    <script id="attendance.html" type="text/ng-template">
+      <ion-view title="Attendance">
+        
+        <ion-content>
+          <h1>Attendance</h1>
+        </ion-content>
+        <div class="tabs tabs-icon-only">
+          <a nav-clear class="tab-item disable-user-behavior" title="Class" nav-clear ui-sref="app.class">
+            <i class="icon ion-home"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+          <a nav-clear class="tab-item disable-user-behavior active" title="Attendance" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="app.attendance">
+            <i class="icon ion-chatbubbles"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+          <a nav-clear class="tab-item disable-user-behavior" title="Score" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="app.score">
+            <i class="icon ion-wineglass"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+        </div>
+      </ion-view>
+    </script>
+
+    <script id="score.html" type="text/ng-template">
+      <ion-view title="Score">
+        
+        <ion-content>
+          <h1>Score</h1>
+        </ion-content>
+        <div class="tabs tabs-icon-only">
+          <a nav-clear class="tab-item disable-user-behavior" title="Class" nav-clear ui-sref="app.class">
+            <i class="icon ion-home"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+          <a nav-clear class="tab-item disable-user-behavior" title="Attendance" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="app.attendance">
+            <i class="icon ion-chatbubbles"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+          <a nav-clear class="tab-item disable-user-behavior active" title="Score" icon-on="ion-ios7-filing" icon-off="ion-ios7-filing-outline" ui-sref="app.score">
+            <i class="icon ion-wineglass"></i><span class="tab-title ng-binding" ng-bind-html="title"></span>
+          </a>
+        </div>
+
+      </ion-view>
+    </script>
+
+    -------------------------------------
+
+    <script id="tabs.html" type="text/ng-template">
+      <ion-view>
+      	<ion-nav-bar class="bar-energized">
+      	      <ion-nav-back-button>
+      	      </ion-nav-back-button>
+      	      <ion-nav-buttons side="left">
+      	        <button menu-toggle="left" class="button button-icon icon ion-navicon"></button>
+      	      </ion-nav-buttons>
+      	</ion-nav-bar>
+      	
+      	<ion-content>
+      	  <ion-tabs tabs-style="tabs-icon-top">
+      	
+      	  <ion-tab title="Class" icon="ion-class" ui-sref="app.class" >
+      	    <ion-nav-view name="tab-content"></ion-nav-view>
+      	  </ion-tab>
+      	
+      	  </ion-tabs>
+      	</ion-content>
+      </ion-view>
+    </script>
+
+    ---------------------------------------------
+
+                  <label class="item item-input item-stacked-label">
+                <span class="input-label">Date/Time</span>
+                <input type="button" class="day-tag" value="We"></input>
+                <input type="button" class="day-tag" value="We"></input>
+                <input type="button" class="day-tag" value="We"></input>
+                <input type="button" class="day-tag" value="Th"></input>
+                <input type="button" class="day-tag" value="Fr"></input>
+                <input type="button" class="day-tag" value="Sa"></input>
+                <input type="button" class="day-tag" value="Su"></input>
+              </label>
+
+
+              /// ทำระบบลบข้อความ

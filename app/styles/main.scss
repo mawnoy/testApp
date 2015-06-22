@@ -1,1 +1,41 @@
 // Your application styles go here
+
+.item .caption-list {
+	font-size: 12px;
+	font-weight: 300;
+}
+
+.list .item-button-right {
+	padding-right: 0;
+}
+
+.item-button-right {
+	.item-content > .next-button {
+		border: none;
+		background: none;
+		top: 0;
+		right: 0;
+		height: 100%;
+	} 
+	.next-button.activated {
+		background:rgba(0, 0, 0, .05);
+		box-shadow: none;
+	}
+}
+
+.day-tags.row {
+	margin-top: 20px;
+}
+
+.day-tag {
+	min-height: auto;
+	background: #eee;
+	line-height: 42px;
+	text-align: center;
+	border: .5px solid #ddd;
+	&.active {
+		background: #FFC900;
+		color: #fff;
+		border: none;
+	}
+}
